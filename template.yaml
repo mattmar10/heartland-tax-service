@@ -15,12 +15,12 @@ Resources:
   TaxServiceAWSApiGateway:
     Type: AWS::Serverless::Api
     Properties:
-      Name: Basic AWS Api Gateway
+      Name: TaxServiceApiGateway
       StageName: Prod
       Cors:
         AllowMethods: "'POST, GET, OPTIONS'"
         AllowHeaders: "'X-Forwarded-For'"
-        AllowOrigin: "'www.example.com'"
+        AllowOrigin: "*"
         MaxAge: "'600'"
         AllowCredentials: true
 
