@@ -1,0 +1,61 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: 'heartland-taxservice
+
+  Sample SAM Template for heartland-taxservice
+
+  '
+Globals:
+  Function:
+    Timeout: 3
+Resources:
+  TaxServiceAWSApiGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: Basic AWS Api Gateway
+      StageName: Prod
+      Cors:
+        AllowMethods: '''POST, GET, OPTIONS'''
+        AllowHeaders: '''X-Forwarded-For'''
+        AllowOrigin: '''www.example.com'''
+        MaxAge: '''600'''
+        AllowCredentials: true
+  HeartlandTaxServiceFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Policies:
+      - SSMParameterReadPolicy:
+          ParameterName: TAX_JAR_API_KEY_SB
+      PackageType: Image
+      Architectures:
+      - x86_64
+      Events:
+        CalculateSalesTax:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: TaxServiceAWSApiGateway
+            Path: /tax-service/calculate-sales-tax
+            Method: post
+      ImageUri: heartlandtaxservicefunction:nodejs12.x-v1
+    Metadata:
+      DockerTag: nodejs12.x-v1
+      DockerContext: ./heartland-tax-service
+      Dockerfile: Dockerfile
+Outputs:
+  TaxServiceApi:
+    Description: API Gateway endpoint URL for Prod stage for Tax Service function
+    Value:
+      Fn::Sub: https://${TaxServiceAWSApiGateway}.execute-api.${AWS::Region}.amazonaws.com/hello/
+  HeartlandTaxServiceFunction:
+    Description: Hello World Lambda Function ARN
+    Value:
+      Fn::GetAtt:
+      - HeartlandTaxServiceFunction
+      - Arn
+  HeartlandTaxServiceFunctionIamRole:
+    Description: Implicit IAM Role created for Hello World function
+    Value:
+      Fn::GetAtt:
+      - HeartlandTaxServiceFunctionRole
+      - Arn
