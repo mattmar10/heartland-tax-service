@@ -93,8 +93,9 @@ export const lambdaHandler = async (
     try {
         const incTaxRequest: IncomingTaxRequest = parseIncomingRequest(event);
         const taxParams: TaxParams = buildTaxParams(incTaxRequest);
+        console.time('tax-jar')
         const result = await taxJarClient.taxForOrder(taxParams);
-
+        console.timeEnd('tax-jar');
         const response: TaxResponse = {
             amountToCollect: result.tax.amount_to_collect,
             rate: result.tax.rate,
