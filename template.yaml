@@ -18,9 +18,9 @@ Resources:
       Name: TaxServiceApiGateway
       StageName: Prod
       Cors:
-        AllowMethods: "'POST, GET, OPTIONS'"
-        AllowHeaders: "'X-Forwarded-For'"
-        AllowOrigin: "*"
+        AllowMethods: "'*'"
+        AllowHeaders: "'*'"
+        AllowOrigin: "'www.example.com'"
         MaxAge: "'600'"
         AllowCredentials: true
 
